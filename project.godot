@@ -8,11 +8,31 @@
 
 config_version=4
 
+_global_script_classes=[ {
+"base": "KinematicBody2D",
+"class": "Fireball",
+"language": "GDScript",
+"path": "res://Fireball.gd"
+}, {
+"base": "KinematicBody2D",
+"class": "Player",
+"language": "GDScript",
+"path": "res://Player.gd"
+} ]
+_global_script_class_icons={
+"Fireball": "",
+"Player": ""
+}
+
 [application]
 
 config/name="Second Project"
 run/main_scene="res://Main.tscn"
 config/icon="res://icon.png"
+
+[autoload]
+
+GlobalSignals="*res://GlobalSignals.gd"
 
 [input]
 

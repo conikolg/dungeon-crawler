@@ -1,10 +1,11 @@
 extends KinematicBody2D
+class_name Player
 
+# Exported variables
+export (int) var movement_speed = 100
 
-# Declare member variables here. Examples:
-# var a = 2
-# var b = "text"
-export (int) var movement_speed = 250
+# Onready variables
+onready var weapon = $FireballWeapon
 
 
 # Called when the node enters the scene tree for the first time.
@@ -33,3 +34,10 @@ func _physics_process(delta: float) -> void:
 	# Turn towards where the mouse is pointing at all times
 	var mouse_position: Vector2 = get_global_mouse_position()
 	self.look_at(mouse_position)
+
+
+# This function will handle one-off input events
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed('shoot'):
+		self.weapon.shoot()
+		
