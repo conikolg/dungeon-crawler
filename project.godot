@@ -9,10 +9,15 @@
 config_version=4
 
 _global_script_classes=[ {
-"base": "KinematicBody2D",
+"base": "Area2D",
 "class": "Fireball",
 "language": "GDScript",
 "path": "res://Fireball.gd"
+}, {
+"base": "Node",
+"class": "ManaPool",
+"language": "GDScript",
+"path": "res://ManaPool.gd"
 }, {
 "base": "KinematicBody2D",
 "class": "Player",
@@ -21,6 +26,7 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Fireball": "",
+"ManaPool": "",
 "Player": ""
 }
 

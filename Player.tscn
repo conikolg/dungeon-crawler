@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://Player.gd" type="Script" id=1]
 [ext_resource path="res://assets/topdown-shooter/Spritesheet/spritesheet_characters.png" type="Texture" id=2]
 [ext_resource path="res://Fireball.tscn" type="PackedScene" id=3]
 [ext_resource path="res://FireballWeapon.gd" type="Script" id=4]
+[ext_resource path="res://ManaPool.tscn" type="PackedScene" id=5]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 13.0
@@ -23,3 +24,5 @@ shape = SubResource( 1 )
 [node name="FireballWeapon" type="Node2D" parent="."]
 script = ExtResource( 4 )
 Fireball = ExtResource( 3 )
+
+[node name="ManaPool" parent="." instance=ExtResource( 5 )]

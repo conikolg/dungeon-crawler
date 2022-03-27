@@ -6,18 +6,19 @@ export (int) var movement_speed = 100
 
 # Onready variables
 onready var weapon = $FireballWeapon
+onready var mana_pool = $ManaPool
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
-	pass # Replace with function body.
+	self.weapon.initialize(mana_pool)
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
-	
-	
+
+
 func _physics_process(delta: float) -> void:
 	# Move in the direction chosen
 	var movement_dir: Vector2 = Vector2.ZERO

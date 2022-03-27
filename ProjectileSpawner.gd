@@ -17,7 +17,7 @@ func _ready():
 
 
 func spawn_fireball(fireball_object: Fireball, position: Vector2, direction: Vector2) -> void:
-	self.add_child(fireball_object)
 	fireball_object.global_position = position
 	fireball_object.direction = direction
 	fireball_object.rotation = direction.angle()
+	self.add_child(fireball_object)
