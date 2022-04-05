@@ -1,10 +1,9 @@
 extends Node2D
 
 
-# Attributes
+# Instance variables
 export (PackedScene) var Fireball
 export (int) var mana_cost = 20
-
 var mana_pool: ManaPool = null
 
 

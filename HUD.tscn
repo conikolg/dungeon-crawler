@@ -76,7 +76,7 @@ custom_styles/bg = SubResource( 2 )
 value = 50.0
 percent_visible = false
 
-[node name="ManaTween" type="Tween" parent="MarginContainer/Rows/HealthMana"]
+[node name="Tween" type="Tween" parent="MarginContainer/Rows/HealthMana"]
 
 [node name="LowerSpace" type="HBoxContainer" parent="MarginContainer/Rows"]
 margin_top = 59.0

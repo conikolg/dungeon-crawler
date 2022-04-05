@@ -15,6 +15,11 @@ _global_script_classes=[ {
 "path": "res://Fireball.gd"
 }, {
 "base": "Node",
+"class": "HealthPool",
+"language": "GDScript",
+"path": "res://HealthPool.gd"
+}, {
+"base": "Node",
 "class": "ManaPool",
 "language": "GDScript",
 "path": "res://ManaPool.gd"
@@ -26,6 +31,7 @@ _global_script_classes=[ {
 } ]
 _global_script_class_icons={
 "Fireball": "",
+"HealthPool": "",
 "ManaPool": "",
 "Player": ""
 }

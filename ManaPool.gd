@@ -18,8 +18,9 @@ func _ready():
 	self._previous_mana = self.current_mana
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta):
+# Called every frame.
+func _process(delta: float) -> void:
+	# Emit signal that mana has changed if it is different than in the last frame
 	if self.current_mana != self._previous_mana:
 		emit_signal("mana_changed", self.current_mana)
 	self._previous_mana = self.current_mana

@@ -2,12 +2,11 @@ extends KinematicBody2D
 class_name Player
 
 
-# Exported variables
-export (int) var movement_speed = 100
-
-# Onready variables
+# Instance variables
+export (int) var movement_speed = 150
 onready var weapon = $FireballWeapon
 onready var mana_pool = $ManaPool
+onready var health_pool = $HealthPool
 
 
 # Called when the node enters the scene tree for the first time.
