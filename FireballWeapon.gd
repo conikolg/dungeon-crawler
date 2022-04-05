@@ -3,7 +3,7 @@ extends Node2D
 
 # Attributes
 export (PackedScene) var Fireball
-export (int) var mana_cost = 25
+export (int) var mana_cost = 20
 
 var mana_pool: ManaPool = null
 
@@ -15,6 +15,7 @@ func _ready():
 
 func initialize(mana_pool: ManaPool) -> void:
 	self.mana_pool = mana_pool
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
