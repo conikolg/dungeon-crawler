@@ -10,7 +10,7 @@ onready var health_pool = $HealthPool
 
 
 # Called when the node enters the scene tree for the first time.
-func _ready():
+func _ready() -> void:
 	self.weapon.initialize(mana_pool)
 
 
