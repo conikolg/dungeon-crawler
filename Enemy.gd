@@ -26,11 +26,11 @@ var right_punch: bool = true
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	self.state = EnemyState.IDLING
+	self.health_pool.connect("health_reached_zero", self, "die")
 
 
 func init(player: Player) -> void:
 	self.target = player
-	self.health_pool.connect("health_reached_zero", self, "die")
 	
 
 func die() -> void:
@@ -66,6 +66,8 @@ func set_state(new_state: int) -> void:
 func _physics_process_idling(delta: float) -> void:
 	if self.target:
 		self.state = EnemyState.CHASING
+	else:
+		print('no target!')
 
 
 func _physics_process_chasing(delta: float) -> void:
