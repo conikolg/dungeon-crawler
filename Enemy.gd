@@ -13,6 +13,7 @@ export (int) var movement_speed = 75
 export (int) var attack_damage = 5
 export (float) var attack_speed = 2
 onready var attack_timer = $AttackTimer
+onready var health_pool = $HealthPool
 var target: Player = null
 var state: int = -1 setget set_state
 
@@ -29,8 +30,13 @@ func _ready() -> void:
 
 func init(player: Player) -> void:
 	self.target = player
+	self.health_pool.connect("health_reached_zero", self, "die")
+	
 
-
+func die() -> void:
+	self.queue_free()
+	
+	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):
 #	pass
