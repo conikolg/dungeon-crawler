@@ -5,6 +5,7 @@ extends CanvasLayer
 onready var health_bar = $MarginContainer/Rows/HealthMana/Health
 onready var mana_bar = $MarginContainer/Rows/HealthMana/Mana
 onready var tween = $MarginContainer/Rows/HealthMana/Tween
+onready var fps_counter = $FpsCounter
 var player: Player
 
 
@@ -30,3 +31,7 @@ func set_mana(new_mana: int) -> void:
 		self.mana_bar.value, new_mana, 0.1,		# From what to what over how long
 		Tween.TRANS_LINEAR, Tween.EASE_IN)		# Transition algorithms
 	self.tween.start()
+
+
+func _process(delta: float) -> void:
+	self.fps_counter.text = "FPS: " + str(Engine.get_frames_per_second())
