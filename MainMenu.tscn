@@ -1,0 +1,94 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://MainMenu.gd" type="Script" id=1]
+
+[node name="Control" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 20.0
+margin_top = 20.0
+margin_right = -20.0
+margin_bottom = -20.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="CenterContainer" type="CenterContainer" parent="MarginContainer"]
+margin_right = 984.0
+margin_bottom = 560.0
+
+[node name="SelectConnection" type="VBoxContainer" parent="MarginContainer/CenterContainer"]
+margin_left = 392.0
+margin_top = 221.0
+margin_right = 592.0
+margin_bottom = 339.0
+
+[node name="Local" type="Button" parent="MarginContainer/CenterContainer/SelectConnection"]
+margin_right = 200.0
+margin_bottom = 50.0
+rect_min_size = Vector2( 200, 50 )
+hint_tooltip = "The single-player experience."
+text = "Start Local Server"
+
+[node name="Spacer" type="Control" parent="MarginContainer/CenterContainer/SelectConnection"]
+margin_top = 54.0
+margin_right = 200.0
+margin_bottom = 64.0
+rect_min_size = Vector2( 0, 10 )
+
+[node name="Remote" type="Button" parent="MarginContainer/CenterContainer/SelectConnection"]
+margin_top = 68.0
+margin_right = 200.0
+margin_bottom = 118.0
+rect_min_size = Vector2( 200, 50 )
+hint_tooltip = "The multi-player experience."
+text = "Connect to a Server"
+
+[node name="EnterServer" type="VBoxContainer" parent="MarginContainer/CenterContainer"]
+margin_left = 392.0
+margin_top = 228.0
+margin_right = 592.0
+margin_bottom = 331.0
+
+[node name="ServerIP" type="LineEdit" parent="MarginContainer/CenterContainer/EnterServer"]
+margin_right = 200.0
+margin_bottom = 35.0
+rect_min_size = Vector2( 200, 35 )
+align = 1
+placeholder_text = "IP Address or Hostname"
+
+[node name="Spacer" type="Control" parent="MarginContainer/CenterContainer/EnterServer"]
+margin_top = 39.0
+margin_right = 200.0
+margin_bottom = 49.0
+rect_min_size = Vector2( 0, 10 )
+
+[node name="ConnectServer" type="Button" parent="MarginContainer/CenterContainer/EnterServer"]
+margin_top = 53.0
+margin_right = 200.0
+margin_bottom = 103.0
+rect_min_size = Vector2( 200, 50 )
+hint_tooltip = "The single-player experience."
+text = "Connect"
+
+[node name="BackButton" type="Button" parent="MarginContainer"]
+margin_top = 530.0
+margin_right = 50.0
+margin_bottom = 560.0
+rect_min_size = Vector2( 50, 30 )
+size_flags_horizontal = 2
+size_flags_vertical = 8
+text = "Back"
+
+[connection signal="pressed" from="MarginContainer/CenterContainer/SelectConnection/Local" to="." method="_on_Local_pressed"]
+[connection signal="pressed" from="MarginContainer/CenterContainer/SelectConnection/Remote" to="." method="_on_Connect_pressed"]
+[connection signal="pressed" from="MarginContainer/CenterContainer/EnterServer/ConnectServer" to="." method="_on_ConnectServer_pressed"]
+[connection signal="pressed" from="MarginContainer/BackButton" to="." method="_on_BackButton_pressed"]

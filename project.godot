@@ -44,8 +44,8 @@ _global_script_class_icons={
 
 [application]
 
-config/name="Second Project"
-run/main_scene="res://Main.tscn"
+config/name="Dungeon Crawler"
+run/main_scene="res://MainMenu.tscn"
 config/icon="res://icon.png"
 
 [autoload]
