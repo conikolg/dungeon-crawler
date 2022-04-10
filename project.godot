@@ -12,27 +12,27 @@ _global_script_classes=[ {
 "base": "KinematicBody2D",
 "class": "Enemy",
 "language": "GDScript",
-"path": "res://Enemy.gd"
+"path": "res://actors/Enemy.gd"
 }, {
 "base": "Area2D",
 "class": "Fireball",
 "language": "GDScript",
-"path": "res://Fireball.gd"
+"path": "res://projectiles/Fireball.gd"
 }, {
 "base": "Node",
 "class": "HealthPool",
 "language": "GDScript",
-"path": "res://HealthPool.gd"
+"path": "res://actors/HealthPool.gd"
 }, {
 "base": "Node",
 "class": "ManaPool",
 "language": "GDScript",
-"path": "res://ManaPool.gd"
+"path": "res://actors/ManaPool.gd"
 }, {
 "base": "KinematicBody2D",
 "class": "Player",
 "language": "GDScript",
-"path": "res://Player.gd"
+"path": "res://actors/Player.gd"
 } ]
 _global_script_class_icons={
 "Enemy": "",
@@ -45,7 +45,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Dungeon Crawler"
-run/main_scene="res://MainMenu.tscn"
+run/main_scene="res://scenes/MainMenu.tscn"
 config/icon="res://icon.png"
 
 [autoload]

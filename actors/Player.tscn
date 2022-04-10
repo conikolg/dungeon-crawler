@@ -1,11 +1,11 @@
 [gd_scene load_steps=8 format=2]
 
-[ext_resource path="res://Player.gd" type="Script" id=1]
+[ext_resource path="res://actors/Player.gd" type="Script" id=1]
 [ext_resource path="res://assets/topdown-shooter/Spritesheet/spritesheet_characters.png" type="Texture" id=2]
-[ext_resource path="res://Fireball.tscn" type="PackedScene" id=3]
-[ext_resource path="res://FireballWeapon.gd" type="Script" id=4]
-[ext_resource path="res://ManaPool.tscn" type="PackedScene" id=5]
-[ext_resource path="res://HealthPool.tscn" type="PackedScene" id=6]
+[ext_resource path="res://projectiles/Fireball.tscn" type="PackedScene" id=3]
+[ext_resource path="res://weapons/FireballWeapon.gd" type="Script" id=4]
+[ext_resource path="res://actors/ManaPool.tscn" type="PackedScene" id=5]
+[ext_resource path="res://actors/HealthPool.tscn" type="PackedScene" id=6]
 
 [sub_resource type="CapsuleShape2D" id=1]
 radius = 13.0
