@@ -76,7 +76,7 @@ margin_top = 53.0
 margin_right = 200.0
 margin_bottom = 103.0
 rect_min_size = Vector2( 200, 50 )
-hint_tooltip = "The single-player experience."
+hint_tooltip = "Start a connection to the server."
 text = "Connect"
 
 [node name="BackButton" type="Button" parent="MarginContainer"]

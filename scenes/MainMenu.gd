@@ -25,7 +25,7 @@ func _ready():
 
 
 func _on_Local_pressed():
-	get_tree().change_scene("res://scenes/Main.tscn")
+	self.get_tree().change_scene("res://scenes/Main.tscn")
 
 
 func _on_Connect_pressed():
