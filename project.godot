@@ -51,6 +51,7 @@ config/icon="res://icon.png"
 [autoload]
 
 GlobalSignals="*res://GlobalSignals.gd"
+Server="*res://Server.gd"
 
 [input]
 
