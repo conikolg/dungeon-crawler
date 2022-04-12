@@ -1,15 +1,11 @@
 extends Node
 
 
-# Instance variables - client and server
-var network: NetworkedMultiplayerENet = NetworkedMultiplayerENet.new()
-
-# Instance variables - server
+# Instance variables
+var network: NetworkedMultiplayerENet
 var max_players: int = 100
 var port: int = 42069
-
-# Instance variables - client
-var ip: String = "127.0.0.1"
+var client
 
 
 # Called when the node enters the scene tree for the first time.
@@ -17,27 +13,23 @@ func _ready() -> void:
 	pass
 
 
-func connectToServer() -> void:
-	print("Connecting to '%s'..." % self.ip)
-	self.network.create_client(self.ip, self.port)
-	self.get_tree().set_network_peer(self.network)
-	print("Created client.")
-	
-	self.network.connect("connection_failed", self, "_on_connection_failed")
-	self.network.connect("connection_succeeded", self, "_on_connection_succeeded")
-	
-	
-func _on_connection_failed() -> void:
-	print("Failed to connect.")
-
-	
-func _on_connection_succeeded() -> void:
-	print("Connection established.")
+# Called every frame
+func _process(delta: float) -> void:
+	if not self.custom_multiplayer:
+		return
+	if not self.custom_multiplayer.has_network_peer():
+		return
+	custom_multiplayer.poll();
 
 
 func startServer() -> void:
+	self.custom_multiplayer = MultiplayerAPI.new();
+	self.network = NetworkedMultiplayerENet.new();
+	self.client = get_node("../Client");
+	self.custom_multiplayer.set_root_node(self.client);
+	
 	self.network.create_server(self.port, self.max_players)
-	self.get_tree().set_network_peer(self.network)
+	self.custom_multiplayer.network_peer = self.network;
 	print("Server has started...")
 	
 	self.network.connect("peer_connected", self, "_on_peer_connected")
