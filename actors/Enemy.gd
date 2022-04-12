@@ -92,7 +92,7 @@ func _physics_process_attacking(delta: float) -> void:
 		self.target.health_pool.current_health -= self.attack_damage
 		
 		# Set attack speed, start the timer
-		self.attack_timer.wait_time = 1 / self.attack_speed
+		self.attack_timer.wait_time = 1.0 / self.attack_speed
 		self.attack_timer.start()
 	
 
