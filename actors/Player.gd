@@ -19,7 +19,7 @@ func _ready() -> void:
 #	pass
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	# Move in the direction chosen
 	var movement_dir: Vector2 = Vector2.ZERO
 	if Input.is_action_pressed("up"):
@@ -35,6 +35,9 @@ func _physics_process(delta: float) -> void:
 	# Turn towards where the mouse is pointing at all times
 	var mouse_position: Vector2 = get_global_mouse_position()
 	self.look_at(mouse_position)
+	
+	# Send position to the server
+	#Client.sendPlayerPosition(self.global_position)
 
 
 # This function will handle one-off input events

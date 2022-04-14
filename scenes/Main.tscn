@@ -17,3 +17,5 @@ script = ExtResource( 1 )
 [node name="Player" parent="." instance=ExtResource( 2 )]
 
 [node name="HUD" parent="." instance=ExtResource( 3 )]
+
+[node name="RemotePlayers" type="Node2D" parent="."]

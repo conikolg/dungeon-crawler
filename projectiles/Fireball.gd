@@ -13,7 +13,7 @@ var direction: Vector2 = Vector2.ZERO
 #	pass
 
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if self.direction != Vector2.ZERO:
 		self.global_position += self.direction.normalized() * self.movement_speed
 
@@ -24,5 +24,5 @@ func _on_Fireball_body_entered(body: Node) -> void:
 	self.queue_free()
 
 
-func _on_Fireball_body_exited(body: Node) -> void:
+func _on_Fireball_body_exited(_body: Node) -> void:
 	pass

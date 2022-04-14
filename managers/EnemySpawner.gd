@@ -13,8 +13,9 @@ func _ready():
 	pass # Replace with function body.
 
 
-func init(player: Player) -> void:
-	self.player = player
+func init(p: Player) -> void:
+	self.player = p
+
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 #func _process(delta):

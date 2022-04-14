@@ -22,7 +22,7 @@ func _ready():
 
 
 # Called every frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	# Emit signal that health has changed if it is different than in the last frame
 	if self.current_health != self._previous_health:
 		emit_signal("health_changed", self.current_health)
@@ -30,7 +30,7 @@ func _process(delta: float) -> void:
 
 
 func set_health(new_health: int) -> void:
-	current_health = clamp(new_health, 0, self.maximum_health)
+	current_health = int(clamp(new_health, 0, self.maximum_health))
 	if self.current_health == 0:
 		emit_signal("health_reached_zero")
 

@@ -63,21 +63,21 @@ func set_state(new_state: int) -> void:
 	state = new_state
 
 
-func _physics_process_idling(delta: float) -> void:
+func _physics_process_idling(_delta: float) -> void:
 	if self.target:
 		self.state = EnemyState.CHASING
 	else:
 		print('no target!')
 
 
-func _physics_process_chasing(delta: float) -> void:
+func _physics_process_chasing(_delta: float) -> void:
 	self.look_at(self.target.global_position)
 	var direction: Vector2 = self.global_position.direction_to(self.target.global_position)
 	var movement: Vector2 = direction * self.movement_speed
 	self.move_and_slide(movement)
 
 
-func _physics_process_attacking(delta: float) -> void:
+func _physics_process_attacking(_delta: float) -> void:
 	if self.attack_timer.is_stopped():
 		# Do an alternating left or right punch
 		if self.right_punch:

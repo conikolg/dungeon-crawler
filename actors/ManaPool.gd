@@ -19,7 +19,7 @@ func _ready():
 
 
 # Called every frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	# Emit signal that mana has changed if it is different than in the last frame
 	if self.current_mana != self._previous_mana:
 		emit_signal("mana_changed", self.current_mana)
@@ -28,4 +28,4 @@ func _process(delta: float) -> void:
 
 func _on_Timer_timeout() -> void:
 	self.current_mana += self.mana_regeneration
-	self.current_mana = clamp(self.current_mana, 0, self.maximum_mana)
+	self.current_mana = int(clamp(self.current_mana, 0, self.maximum_mana))

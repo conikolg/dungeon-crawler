@@ -12,8 +12,8 @@ func _ready():
 	pass # Replace with function body.
 
 
-func initialize(mana_pool: ManaPool) -> void:
-	self.mana_pool = mana_pool
+func initialize(pool: ManaPool) -> void:
+	self.mana_pool = pool
 
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.

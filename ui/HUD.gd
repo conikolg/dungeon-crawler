@@ -9,8 +9,8 @@ onready var fps_counter = $FpsCounter
 var player: Player
 
 
-func set_player(player: Player):
-	self.player = player
+func set_player(p: Player):
+	self.player = p
 	self.player.mana_pool.connect("mana_changed", self, "set_mana")
 	self.player.health_pool.connect("health_changed", self, "set_health")
 	self.set_mana(self.player.mana_pool.current_mana)
@@ -33,5 +33,5 @@ func set_mana(new_mana: int) -> void:
 	self.tween.start()
 
 
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	self.fps_counter.text = "FPS: " + str(Engine.get_frames_per_second())
