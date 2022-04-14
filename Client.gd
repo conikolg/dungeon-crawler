@@ -2,16 +2,25 @@ extends Node
 
 
 # Instance variables
-var network: NetworkedMultiplayerENet
+var peer: NetworkedMultiplayerENet
 var port: int = 42069
 var ip: String = "localhost"
 var server
 
 
+func _init() -> void:
+	# Thank you https://github.com/LudiDorici/gd-custom-multiplayer
+	# First, we assign a new MultiplayerAPI to our this node
+	custom_multiplayer = MultiplayerAPI.new()
+	# Then we need to specify that this will be the root node for this custom
+	# MultlpayerAPI, so that all path references will be relative to this one
+	# and only its children will be affected by RPCs/RSETs
+	custom_multiplayer.set_root_node(self)
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	print("Client tree: ", self.get_tree())
-	print("Client mp: ", self.multiplayer)
+	pass
 
 
 # Called every frame
@@ -24,18 +33,14 @@ func _process(_delta: float) -> void:
 
 
 func connectToServer() -> void:
-	self.custom_multiplayer = MultiplayerAPI.new()
-	self.network = NetworkedMultiplayerENet.new()
-	self.custom_multiplayer.root_node = self.get_node("/root/Server")
-	
-	self.network.create_client(self.ip, self.port)
-	self.custom_multiplayer.network_peer = self.network
-	print("Client net peer: ", self.get_tree().network_peer)
+	self.peer = NetworkedMultiplayerENet.new()
+	self.peer.create_client(self.ip, self.port)
+	self.multiplayer.set_network_peer(self.peer)
 	print("Connecting to '%s'..." % self.ip)
 	
 	var error: int = 0
-	error += self.network.connect("connection_failed", self, "_on_connection_failed")
-	error += self.network.connect("connection_succeeded", self, "_on_connection_succeeded")
+	error += self.peer.connect("connection_failed", self, "_on_connection_failed")
+	error += self.peer.connect("connection_succeeded", self, "_on_connection_succeeded")
 	if error != OK:
 		print("Error in client multiplayer signal connect.")
 

@@ -2,16 +2,24 @@ extends Node
 
 
 # Instance variables
-var network: NetworkedMultiplayerENet
+var peer: NetworkedMultiplayerENet
 var port: int = 42069
-var max_players: int = 100
 var client
+
+
+func _init() -> void:
+	# Thank you https://github.com/LudiDorici/gd-custom-multiplayer
+	# First, we assign a new MultiplayerAPI to our this node
+	custom_multiplayer = MultiplayerAPI.new()
+	# Then we need to specify that this will be the root node for this custom
+	# MultlpayerAPI, so that all path references will be relative to this one
+	# and only its children will be affected by RPCs/RSETs
+	custom_multiplayer.set_root_node(self)
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	print("Server tree: ", self.get_tree())
-	print("Server mp: ", self.multiplayer)
+	pass
 
 
 # Called every frame
@@ -24,18 +32,14 @@ func _process(_delta: float) -> void:
 
 
 func startServer() -> void:
-	self.custom_multiplayer = MultiplayerAPI.new()
-	self.network = NetworkedMultiplayerENet.new()
-	self.custom_multiplayer.root_node = self.get_node("/root/Client")
-	
-	self.network.create_server(self.port, self.max_players)
-	self.custom_multiplayer.network_peer = self.network
-	print("Server net peer: ", self.get_tree().network_peer)
+	self.peer = NetworkedMultiplayerENet.new()
+	self.peer.create_server(port)
+	self.multiplayer.set_network_peer(self.peer)
 	print("Server has started...")
 	
 	var error: int = 0
-	error += self.network.connect("peer_connected", self, "_on_peer_connected")
-	error += self.network.connect("peer_disconnected", self, "_on_peer_disconnected")
+	error += self.peer.connect("peer_connected", self, "_on_peer_connected")
+	error += self.peer.connect("peer_disconnected", self, "_on_peer_disconnected")
 	if error != OK:
 		print("Error in server multiplayer signal connect.")
 
@@ -52,7 +56,7 @@ remote func updatePlayerPosition(position, _requester) -> void:
 	print("received: ", position)
 
 
-remotesync func request_data():
+remote func request_data():
 	print("Got rpc from client")
 	var clientID: int = self.multiplayer.get_rpc_sender_id()
 	rpc_id(clientID, "response_data", "Hello World")
