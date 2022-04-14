@@ -48,18 +48,29 @@ func connectToServer() -> void:
 func _on_connection_failed() -> void:
 	print("Failed to connect.")
 
-	
+
 func _on_connection_succeeded() -> void:
 	print("Connection established.")
 	rpc_id(1, "request_data")
 
 
+##################################################
+#			Outgoing Network Functions
+##################################################
+
+func send_server_player_pos(position: Vector2) -> void:
+	if self.peer.get_connection_status() != NetworkedMultiplayerPeer.CONNECTION_CONNECTED:
+		return
+	
+	rpc_id(1, "receive_server_player_pos", position)
+
+
+##################################################
+#			Incoming Network Functions
+##################################################
+
 remote func response_data(text: String):
 	print("got from server: ", text)
 
 
-func sendPlayerPosition(position: Vector2) -> void:
-	if self.network.get_connection_status() == 2:
-		rpc_id(1, "updatePlayerPosition", position)
-	else:
-		print("Not connected")
+

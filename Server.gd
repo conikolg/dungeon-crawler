@@ -52,11 +52,21 @@ func _on_peer_disconnected(peer_id: int) -> void:
 	print("Peer with id=%s disconnected." % peer_id)
 
 
-remote func updatePlayerPosition(position, _requester) -> void:
-	print("received: ", position)
+##################################################
+#			Outgoing Network Functions
+##################################################
 
 
+##################################################
+#			Incoming Network Functions
+##################################################
+
+remote func receive_server_player_pos(position: Vector2) -> void:
+	var client_id: int = self.multiplayer.get_rpc_sender_id()
+	print("server received: %s from peer %d" % [position, client_id])
+	
+	
 remote func request_data():
 	print("Got rpc from client")
-	var clientID: int = self.multiplayer.get_rpc_sender_id()
-	rpc_id(clientID, "response_data", "Hello World")
+	var client_id: int = self.multiplayer.get_rpc_sender_id()
+	rpc_id(client_id, "response_data", "Hello World")
