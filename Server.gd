@@ -63,9 +63,8 @@ func _on_peer_disconnected(peer_id: int) -> void:
 
 remote func receive_server_player_pos(position: Vector2) -> void:
 	var client_id: int = self.multiplayer.get_rpc_sender_id()
-	print("server received: %s from peer %d" % [position, client_id])
-	
-	
+
+
 remote func request_data():
 	print("Got rpc from client")
 	var client_id: int = self.multiplayer.get_rpc_sender_id()

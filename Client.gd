@@ -62,7 +62,7 @@ func send_server_player_pos(position: Vector2) -> void:
 	if self.peer.get_connection_status() != NetworkedMultiplayerPeer.CONNECTION_CONNECTED:
 		return
 	
-	rpc_id(1, "receive_server_player_pos", position)
+	rpc_unreliable_id(1, "receive_server_player_pos", position)
 
 
 ##################################################
@@ -71,6 +71,3 @@ func send_server_player_pos(position: Vector2) -> void:
 
 remote func response_data(text: String):
 	print("got from server: ", text)
-
-
-
