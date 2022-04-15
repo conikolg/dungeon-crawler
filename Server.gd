@@ -52,6 +52,9 @@ func _on_peer_connected(peer_id: int) -> void:
 
 func _on_peer_disconnected(peer_id: int) -> void:
 	print("Peer with id=%s disconnected." % peer_id)
+	
+	# Delete this peer from the world's players state
+	self.world_state["players"].erase(str(peer_id))
 
 
 ##########################################

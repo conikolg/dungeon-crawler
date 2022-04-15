@@ -75,15 +75,22 @@ remote func client_receive_player_pos(player_dict: Dictionary) -> void:
 	var my_id = self.multiplayer.get_network_unique_id()
 	player_dict.erase(str(my_id))
 	
+	# Delete players that do not exist in the player_dict
+	for child in self.get_node("/root/Main/RemotePlayers").get_children():
+		var child_peer_id: String = child.name.substr("Player".length())
+		if !(child_peer_id in player_dict.keys()):
+			self.get_node("/root/Main/RemotePlayers").remove_child(self.get_node(child.get_path()))
+			child.queue_free()
+	
 	# Set new global position for each remote player
 	for peer_id in player_dict:
 		# Get remote player node
-		var player_node = self.get_node_or_null("../Main/RemotePlayers/Player%s" % peer_id)
+		var player_node = self.get_node_or_null("/root/Main/RemotePlayers/Player%s" % peer_id)
 		# Create remote player if necessary
 		if player_node == null:
 			player_node = remote_player_scene.instance()
 			player_node.name = "Player%s" % peer_id
-			self.get_node("../Main/RemotePlayers").add_child(player_node)
+			self.get_node("/root/Main/RemotePlayers").add_child(player_node)
 		# Update global position
 		var player_state: Dictionary = player_dict[peer_id]
 		player_node.global_position = player_state["pos"]
