@@ -5,7 +5,7 @@ extends Node
 var peer: NetworkedMultiplayerENet
 var port: int = 42069
 var client
-var physics_tick_max: int = 4
+var physics_tick_max: int = 2  # Run at 30 ticks/sec
 var physics_tick_counter: int = physics_tick_max
 var world_state: Dictionary
 
@@ -91,10 +91,11 @@ func server_update() -> void:
 #			Incoming Network Functions
 ##################################################
 
-remote func receive_server_player_pos(position: Vector2) -> void:
+remote func server_receive_player_pos(state: Dictionary) -> void:
 	var client_id: int = self.multiplayer.get_rpc_sender_id()
 	var player_state: Dictionary = self.world_state['players']
-	player_state[str(client_id)] = position
+	
+	player_state[str(client_id)] = state
 
 
 remote func request_data():

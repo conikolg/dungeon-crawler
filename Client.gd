@@ -59,11 +59,11 @@ func _on_connection_succeeded() -> void:
 #			Outgoing Network Functions
 ##################################################
 
-func send_server_player_pos(position: Vector2) -> void:
+func send_server_player_pos(state: Dictionary) -> void:
 	if self.peer.get_connection_status() != NetworkedMultiplayerPeer.CONNECTION_CONNECTED:
 		return
 	
-	rpc_unreliable_id(1, "receive_server_player_pos", position)
+	rpc_unreliable_id(1, "server_receive_player_pos", state)
 
 
 ##################################################
@@ -85,7 +85,9 @@ remote func client_receive_player_pos(player_dict: Dictionary) -> void:
 			player_node.name = "Player%s" % peer_id
 			self.get_node("../Main/RemotePlayers").add_child(player_node)
 		# Update global position
-		player_node.global_position = player_dict[peer_id]
+		var player_state: Dictionary = player_dict[peer_id]
+		player_node.global_position = player_state["pos"]
+		player_node.rotation = player_state["rot"]
 
 
 remote func response_data(text: String) -> void:
