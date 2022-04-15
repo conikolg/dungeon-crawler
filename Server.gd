@@ -5,6 +5,9 @@ extends Node
 var peer: NetworkedMultiplayerENet
 var port: int = 42069
 var client
+var physics_tick_max: int = 4
+var physics_tick_counter: int = physics_tick_max
+var world_state: Dictionary
 
 
 func _init() -> void:
@@ -19,7 +22,8 @@ func _init() -> void:
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass
+	self.world_state = {}
+	self.world_state['players'] = {}
 
 
 # Called every frame
@@ -29,7 +33,30 @@ func _process(_delta: float) -> void:
 	if not self.custom_multiplayer.has_network_peer():
 		return
 	custom_multiplayer.poll();
+	
 
+func _physics_process(_delta: float) -> void:
+	self.physics_tick_counter -= 1
+	if self.physics_tick_counter == 0:
+		self.server_update()
+		self.physics_tick_counter = self.physics_tick_max
+
+
+################################
+#			Signals
+################################
+
+func _on_peer_connected(peer_id: int) -> void:
+	print("Peer with id=%s connected." % peer_id)
+	
+
+func _on_peer_disconnected(peer_id: int) -> void:
+	print("Peer with id=%s disconnected." % peer_id)
+
+
+##########################################
+#			Internal Functions
+##########################################
 
 func startServer() -> void:
 	self.peer = NetworkedMultiplayerENet.new()
@@ -44,13 +71,16 @@ func startServer() -> void:
 		print("Error in server multiplayer signal connect.")
 
 
-func _on_peer_connected(peer_id: int) -> void:
-	print("Peer with id=%s connected." % peer_id)
+func server_update() -> void:
+	if not self.peer:
+		return
 	
-
-func _on_peer_disconnected(peer_id: int) -> void:
-	print("Peer with id=%s disconnected." % peer_id)
-
+	if self.peer.get_connection_status() != NetworkedMultiplayerPeer.CONNECTION_CONNECTED:
+		return
+	
+	# Send all players the locations of all players
+	rpc_unreliable_id(0, "client_receive_player_pos", self.world_state["players"])
+	
 
 ##################################################
 #			Outgoing Network Functions
@@ -63,6 +93,8 @@ func _on_peer_disconnected(peer_id: int) -> void:
 
 remote func receive_server_player_pos(position: Vector2) -> void:
 	var client_id: int = self.multiplayer.get_rpc_sender_id()
+	var player_state: Dictionary = self.world_state['players']
+	player_state[str(client_id)] = position
 
 
 remote func request_data():
