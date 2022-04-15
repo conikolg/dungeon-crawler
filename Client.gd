@@ -6,6 +6,7 @@ var peer: NetworkedMultiplayerENet
 var port: int = 42069
 var ip: String = "localhost"
 var server
+var last_server_update_time: int = -1
 
 
 func _init() -> void:
@@ -58,10 +59,14 @@ func _on_connection_succeeded() -> void:
 #			Outgoing Network Functions
 ##################################################
 
-func send_server_player_pos(state: Dictionary) -> void:
+func send_server_player_state(state: Dictionary) -> void:
 	if self.peer.get_connection_status() != NetworkedMultiplayerPeer.CONNECTION_CONNECTED:
 		return
 	
+	# Attach current timestamp (ms since epoch) to the payload
+	state["time"] = OS.get_system_time_msecs()
+	
+	# Dispatch payload to server
 	rpc_unreliable_id(1, "server_receive_player_pos", state)
 
 
@@ -70,9 +75,12 @@ func send_server_player_pos(state: Dictionary) -> void:
 ##################################################
 
 remote func client_receive_world_state(world_state: Dictionary) -> void:
-	var player_dict: Dictionary = world_state["players"]
+	# Ignore if this is the most updated world state so far
+	if world_state["time"] <= self.last_server_update_time:
+		return
 	
 	# Erase the local player from the dictionary
+	var player_dict: Dictionary = world_state["players"]
 	var my_id = self.multiplayer.get_network_unique_id()
 	player_dict.erase(str(my_id))
 	

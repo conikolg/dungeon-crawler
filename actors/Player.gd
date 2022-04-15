@@ -37,7 +37,7 @@ func _physics_process(_delta: float) -> void:
 	self.look_at(mouse_position)
 	
 	# Send position to the server
-	Client.send_server_player_pos({
+	Client.send_server_player_state({
 		"pos": self.global_position,
 		"rot": self.rotation
 	})

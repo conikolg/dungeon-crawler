@@ -77,13 +77,27 @@ func startServer() -> void:
 func server_update() -> void:
 	if not self.peer:
 		return
-	
 	if self.peer.get_connection_status() != NetworkedMultiplayerPeer.CONNECTION_CONNECTED:
 		return
 	
+	# Deep copy the world state before changing it
+	var state: Dictionary = self.strip_timestamps(self.world_state.duplicate(true))
+	# Add the server's timestamp to the whole payload
+	state["time"] = OS.get_system_time_msecs()
 	# Send all players the locations of all players
-	rpc_unreliable_id(0, "client_receive_world_state", self.world_state)
+	rpc_unreliable_id(0, "client_receive_world_state", state)
+
+
+func strip_timestamps(state: Dictionary) -> Dictionary:
+	# Recursively remove any "time" attributes from subcomponents
+	if "time" in state.keys():
+		state.erase("time")
+	for key in state:
+		if state[key] is Dictionary:
+			self.strip_timestamps(state[key])
 	
+	return state
+
 
 ##################################################
 #			Outgoing Network Functions
@@ -95,10 +109,17 @@ func server_update() -> void:
 ##################################################
 
 remote func server_receive_player_pos(state: Dictionary) -> void:
+	# Get who sent this update
 	var client_id: int = self.multiplayer.get_rpc_sender_id()
-	var player_state: Dictionary = self.world_state['players']
-	
-	player_state[str(client_id)] = state
+	# Is it a brand new update?
+	if !(str(client_id) in self.world_state['players'].keys()):
+		self.world_state['players'][str(client_id)] = state
+	# Otherwise, is it newer?
+	elif state["time"] > self.world_state['players'][str(client_id)]["time"]:
+		self.world_state['players'][str(client_id)] = state
+	# Not new update - ignore it
+	else:
+		pass
 
 
 remote func request_data():
