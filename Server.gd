@@ -82,7 +82,7 @@ func server_update() -> void:
 		return
 	
 	# Send all players the locations of all players
-	rpc_unreliable_id(0, "client_receive_player_pos", self.world_state["players"])
+	rpc_unreliable_id(0, "client_receive_world_state", self.world_state)
 	
 
 ##################################################
