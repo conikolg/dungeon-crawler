@@ -2,9 +2,11 @@ extends Node
 
 
 # Instance variables
-var peer: NetworkedMultiplayerENet
 var port: int = 42069
+var allow_remote_players: bool = true
+var peer: NetworkedMultiplayerENet
 var client
+
 var physics_tick_max: int = 2  # Run at 30 ticks/sec
 var physics_tick_counter: int = physics_tick_max
 var world_state: Dictionary
@@ -63,6 +65,10 @@ func _on_peer_disconnected(peer_id: int) -> void:
 
 func startServer() -> void:
 	self.peer = NetworkedMultiplayerENet.new()
+	if self.allow_remote_players:
+		self.peer.set_bind_ip("*")
+	else:
+		self.peer.set_bind_ip("127.0.0.1")
 	self.peer.create_server(port)
 	self.multiplayer.set_network_peer(self.peer)
 	print("Server has started...")
