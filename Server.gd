@@ -7,7 +7,7 @@ var allow_remote_players: bool = true
 var peer: NetworkedMultiplayerENet
 var client
 
-var physics_tick_max: int = 2  # Run at 30 ticks/sec
+var physics_tick_max: int = 3  # Run at 20 ticks/sec
 var physics_tick_counter: int = physics_tick_max
 var world_state: Dictionary
 
