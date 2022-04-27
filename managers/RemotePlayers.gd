@@ -19,6 +19,13 @@ func _process(_delta: float) -> void:
 	var prev_player_state: Dictionary = Client.world_state_buffer[0]["players"]
 	var future_player_state: Dictionary = Client.world_state_buffer[1]["players"]
 	
+	# Delete players that do not exist anymore
+	for child in self.get_children():
+		var child_peer_id: String = child.name.substr("Player".length())
+		if !(child_peer_id in prev_player_state.keys()):
+			self.remove_child(self.get_node(child.get_path()))
+			child.queue_free()
+	
 	# Update for all players
 	for peer_id in future_player_state.keys():
 		# Can't lerp if nonexistent previously
@@ -37,12 +44,3 @@ func _process(_delta: float) -> void:
 		var rot: float = lerp_angle(prev_player_state[peer_id]["rot"], future_player_state[peer_id]["rot"], Client.lerp_factor)
 		player_node.global_position = pos
 		player_node.rotation = rot
-
-
-func update_players(player_state: Dictionary) -> void:
-	# Delete players that do not exist in player_state
-	for child in self.get_children():
-		var child_peer_id: String = child.name.substr("Player".length())
-		if !(child_peer_id in player_state.keys()):
-			self.remove_child(self.get_node(child.get_path()))
-			child.queue_free()

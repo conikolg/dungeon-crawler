@@ -106,9 +106,6 @@ remote func client_receive_world_state(world_state: Dictionary) -> void:
 	
 	# Record as state of the world
 	self.world_state_buffer.append(world_state)
-	
-	# Hand off the state of all players to the RemotePlayers node
-	self.get_node("/root/Main/RemotePlayers").update_players(player_dict)
 
 
 remote func response_data(text: String) -> void:
