@@ -19,6 +19,9 @@ func _physics_process(_delta: float) -> void:
 
 
 func _on_Fireball_body_entered(body: Node) -> void:
+	if body is RemoteEnemy:
+		Client.send_server_enemy_hit(body.name)
+	
 	if "health_pool" in body:
 		body.health_pool.current_health -= self.damage
 	self.queue_free()

@@ -86,6 +86,10 @@ func send_server_player_state(state: Dictionary) -> void:
 	rpc_unreliable_id(1, "server_receive_player_pos", state)
 
 
+func send_server_enemy_hit(enemy_name: String) -> void:
+	rpc_id(1, "server_receive_enemy_hit", enemy_name)
+
+
 ##################################################
 #			Incoming Network Functions
 ##################################################
@@ -105,12 +109,6 @@ remote func client_receive_world_state(world_state: Dictionary) -> void:
 	
 	# Hand off the state of all players to the RemotePlayers node
 	self.get_node("/root/Main/RemotePlayers").update_players(player_dict)
-	
-	# Debug info about enemies
-	if world_state.has("enemies"):
-		print("World state @%d has %d enemies." % [world_state["time"], world_state["enemies"].size()])
-	else:
-		print("World state @%d did not contain enemy data." % world_state["time"])
 
 
 remote func response_data(text: String) -> void:

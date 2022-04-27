@@ -38,14 +38,14 @@ func _ready() -> void:
 	self.world_state["enemies"] = {}	# Create dictionary to track all enemies
 	
 	# Set locations of enemy spawn points
-	for x in range(1, 10):
-		for y in range(1, 10):
+	for x in range(2, 7):
+		for y in range(2, 5):
 			self.enemy_spawn_locations.append(Vector2(100 * x, 100 * y))
 	
 	# Create a timer to spawn enemies
 	var timer: Timer = Timer.new()
+	timer.name = "EnemySpawnTimer"
 	timer.wait_time = self.enemy_spawn_interval
-	timer.autostart = true
 	timer.connect("timeout", self, "_on_enemy_spawn_timer_timeout")
 	self.add_child(timer)
 
@@ -83,11 +83,17 @@ func _on_peer_disconnected(peer_id: int) -> void:
 
 func _on_enemy_spawn_timer_timeout() -> void:
 	var enemies: Dictionary = self.world_state["enemies"]
+	var players: Dictionary = self.world_state["players"]
 	if enemies.size() >= self.enemy_max_count:
 		return
 	
 	var location: Vector2 = self.enemy_spawn_locations[randi() % self.enemy_spawn_locations.size()]
-	var direction: float = Vector2.ZERO.angle()
+	var target_player_location: Vector2
+	if players.size() > 0:
+		target_player_location = players[players.keys()[randi() % players.size()]]["pos"]
+	else:
+		target_player_location = Vector2.ZERO
+	var direction: float = target_player_location.angle_to_point(location)
 	var enemy_id = self.enemy_unused_id
 	self.enemy_unused_id += 1
 	var enemy_name = "Enemy%d" % enemy_id
@@ -119,6 +125,8 @@ func startServer() -> void:
 	error += self.peer.connect("peer_disconnected", self, "_on_peer_disconnected")
 	if error != OK:
 		print("Error in server multiplayer signal connect.")
+	
+	self.get_node("EnemySpawnTimer").start()
 
 
 func server_update() -> void:
@@ -167,6 +175,11 @@ remote func server_receive_player_pos(state: Dictionary) -> void:
 	# Not new update - ignore it
 	else:
 		pass
+
+
+remote func server_receive_enemy_hit(enemy_name: String) -> void:
+	if self.world_state["enemies"].has(enemy_name):
+		self.world_state["enemies"].erase(enemy_name)
 
 
 remote func request_data():

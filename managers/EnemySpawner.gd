@@ -32,7 +32,13 @@ func _process(_delta: float) -> void:
 	var prev_enemy_state: Dictionary = Client.world_state_buffer[0]["enemies"]
 	var future_enemy_state: Dictionary = Client.world_state_buffer[1]["enemies"]
 	
-	# Update for all enemies
+	# Remove enemies that are missing
+	for enemy_node in self.get_children():
+		if not prev_enemy_state.has(enemy_node.name):
+			self.remove_child(enemy_node)
+			enemy_node.queue_free()
+	
+	# Update all enemies from server
 	for enemy_name in future_enemy_state.keys():
 		# Can't lerp if nonexistent previously
 		if not prev_enemy_state.has(enemy_name):

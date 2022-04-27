@@ -33,13 +33,19 @@ _global_script_classes=[ {
 "class": "Player",
 "language": "GDScript",
 "path": "res://actors/Player.gd"
+}, {
+"base": "KinematicBody2D",
+"class": "RemoteEnemy",
+"language": "GDScript",
+"path": "res://actors/RemoteEnemy.gd"
 } ]
 _global_script_class_icons={
 "Enemy": "",
 "Fireball": "",
 "HealthPool": "",
 "ManaPool": "",
-"Player": ""
+"Player": "",
+"RemoteEnemy": ""
 }
 
 [application]
