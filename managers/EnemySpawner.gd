@@ -4,9 +4,14 @@ extends Node2D
 # Instance variables
 export (PackedScene) var enemy = null
 export (int) var max_enemies = 6
+
 onready var spawn_timer = $SpawnTimer
+
 var player: Player = null
 var enemy_count: int = 0
+
+var remote_enemy_scene = preload("res://actors/RemoteEnemy.tscn")
+
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -17,12 +22,38 @@ func init(p: Player) -> void:
 	self.player = p
 
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-#func _process(delta):
-#	pass
+# Called every frame
+func _process(_delta: float) -> void:
+	# Nothing to do if not enough states exist
+	if Client.world_state_buffer.size() < 2:
+		return
+	
+	# Get necessary data from Client
+	var prev_enemy_state: Dictionary = Client.world_state_buffer[0]["enemies"]
+	var future_enemy_state: Dictionary = Client.world_state_buffer[1]["enemies"]
+	
+	# Update for all enemies
+	for enemy_name in future_enemy_state.keys():
+		# Can't lerp if nonexistent previously
+		if not prev_enemy_state.has(enemy_name):
+			continue
+		
+		# Get enemy's node
+		var enemy_node = self.get_node_or_null(str(enemy_name))
+		# Enemy doesn't exist - spawn them in
+		if enemy_node == null:
+			enemy_node = remote_enemy_scene.instance()
+			enemy_node.name = str(enemy_name)
+			self.add_child(enemy_node)
+		# Lerp player position and rotation
+		var pos: Vector2 = lerp(prev_enemy_state[enemy_name]["pos"], future_enemy_state[enemy_name]["pos"], Client.lerp_factor)
+		var rot: float = lerp_angle(prev_enemy_state[enemy_name]["rot"], future_enemy_state[enemy_name]["rot"], Client.lerp_factor)
+		enemy_node.global_position = pos
+		enemy_node.rotation = rot
 
 
 func _on_SpawnTimer_timeout() -> void:
+	return	# TODO: Remove? This is to prevent local spawning
 	self.spawn_enemy()
 	self.try_spawning()
 

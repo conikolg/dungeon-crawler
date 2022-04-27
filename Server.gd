@@ -11,21 +11,43 @@ var physics_tick_max: int = 3  # Run at 20 ticks/sec
 var physics_tick_counter: int = physics_tick_max
 var world_state: Dictionary
 
+var enemy_max_count: int = 10
+var enemy_spawn_interval: int = 2
+var enemy_unused_id: int = 1
+var enemy_spawn_locations: Array
+
 
 func _init() -> void:
 	# Thank you https://github.com/LudiDorici/gd-custom-multiplayer
 	# First, we assign a new MultiplayerAPI to our this node
 	custom_multiplayer = MultiplayerAPI.new()
 	# Then we need to specify that this will be the root node for this custom
-	# MultlpayerAPI, so that all path references will be relative to this one
+	# MultiplayerAPI, so that all path references will be relative to this one
 	# and only its children will be affected by RPCs/RSETs
 	custom_multiplayer.set_root_node(self)
 
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
+	# Set random seed
+	randomize()
+	
+	# Initialize world state
 	self.world_state = {}
-	self.world_state['players'] = {}
+	self.world_state["players"] = {}	# Create dictionary to track all players
+	self.world_state["enemies"] = {}	# Create dictionary to track all enemies
+	
+	# Set locations of enemy spawn points
+	for x in range(1, 10):
+		for y in range(1, 10):
+			self.enemy_spawn_locations.append(Vector2(100 * x, 100 * y))
+	
+	# Create a timer to spawn enemies
+	var timer: Timer = Timer.new()
+	timer.wait_time = self.enemy_spawn_interval
+	timer.autostart = true
+	timer.connect("timeout", self, "_on_enemy_spawn_timer_timeout")
+	self.add_child(timer)
 
 
 # Called every frame
@@ -44,9 +66,9 @@ func _physics_process(_delta: float) -> void:
 		self.physics_tick_counter = self.physics_tick_max
 
 
-################################
-#			Signals
-################################
+########################################
+#			Signals/Callbacks
+########################################
 
 func _on_peer_connected(peer_id: int) -> void:
 	print("Peer with id=%s connected." % peer_id)
@@ -57,6 +79,25 @@ func _on_peer_disconnected(peer_id: int) -> void:
 	
 	# Delete this peer from the world's players state
 	self.world_state["players"].erase(str(peer_id))
+
+
+func _on_enemy_spawn_timer_timeout() -> void:
+	var enemies: Dictionary = self.world_state["enemies"]
+	if enemies.size() >= self.enemy_max_count:
+		return
+	
+	var location: Vector2 = self.enemy_spawn_locations[randi() % self.enemy_spawn_locations.size()]
+	var direction: float = Vector2.ZERO.angle()
+	var enemy_id = self.enemy_unused_id
+	self.enemy_unused_id += 1
+	var enemy_name = "Enemy%d" % enemy_id
+	
+	enemies[enemy_name] = {
+		"name": enemy_name,
+		"id": enemy_id,
+		"pos": location,
+		"rot": direction
+	}
 
 
 ##########################################

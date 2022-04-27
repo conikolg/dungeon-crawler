@@ -18,7 +18,7 @@ func _init() -> void:
 	# First, we assign a new MultiplayerAPI to our this node
 	custom_multiplayer = MultiplayerAPI.new()
 	# Then we need to specify that this will be the root node for this custom
-	# MultlpayerAPI, so that all path references will be relative to this one
+	# MultiplayerAPI, so that all path references will be relative to this one
 	# and only its children will be affected by RPCs/RSETs
 	custom_multiplayer.set_root_node(self)
 
@@ -105,6 +105,12 @@ remote func client_receive_world_state(world_state: Dictionary) -> void:
 	
 	# Hand off the state of all players to the RemotePlayers node
 	self.get_node("/root/Main/RemotePlayers").update_players(player_dict)
+	
+	# Debug info about enemies
+	if world_state.has("enemies"):
+		print("World state @%d has %d enemies." % [world_state["time"], world_state["enemies"].size()])
+	else:
+		print("World state @%d did not contain enemy data." % world_state["time"])
 
 
 remote func response_data(text: String) -> void:
