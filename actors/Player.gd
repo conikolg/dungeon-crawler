@@ -36,14 +36,18 @@ func _physics_process(_delta: float) -> void:
 	var mouse_position: Vector2 = get_global_mouse_position()
 	self.look_at(mouse_position)
 	
-	# Send position to the server
-	Client.send_server_player_state({
-		"pos": self.global_position,
-		"rot": self.rotation
-	})
+	# Send player state to the server
+	Client.send_server_player_state(self.serialize())
 
 
 # This function will handle one-off input events
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed('shoot'):
 		self.weapon.shoot()
+
+
+func serialize() -> Dictionary:
+	return {
+		"pos": self.global_position,
+		"rot": self.rotation
+	}

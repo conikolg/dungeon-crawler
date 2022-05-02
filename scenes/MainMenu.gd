@@ -25,8 +25,8 @@ func _ready() -> void:
 
 
 func _on_Local_pressed() -> void:
-	# Create local server and connect to it as a peer
-	Server.startServer()
+	# Connect to localhost server
+	Client.ip = "localhost"
 	Client.connectToServer()
 	# Transition to actual game
 	self.get_tree().change_scene("res://scenes/Main.tscn")
