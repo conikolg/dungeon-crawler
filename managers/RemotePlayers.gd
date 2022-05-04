@@ -21,23 +21,29 @@ func _process(_delta: float) -> void:
 	
 	# Delete players that do not exist anymore
 	for child in self.get_children():
-		var child_peer_id: String = child.name.substr("Player".length())
-		if !(child_peer_id in prev_player_state.keys()):
+		# Ignore for local client
+		if child.name == str(Client.multiplayer.get_network_unique_id()):
+			continue
+		if !(child.name in prev_player_state.keys()):
 			self.remove_child(self.get_node(child.get_path()))
 			child.queue_free()
 	
 	# Update for all players
 	for peer_id in future_player_state.keys():
+		# Ignore for local client
+		if peer_id == str(Client.multiplayer.get_network_unique_id()):
+			continue
+		
 		# Can't lerp if nonexistent previously
 		if not prev_player_state.has(peer_id):
 			continue
 		
 		# Get player's node
-		var player_node = self.get_node_or_null("Player%s" % peer_id)
+		var player_node = self.get_node_or_null(str(peer_id))
 		# Player doesn't exist - spawn them in
 		if player_node == null:
 			player_node = remote_player_scene.instance()
-			player_node.name = "Player%s" % peer_id
+			player_node.name = str(peer_id)
 			self.add_child(player_node)
 		# Lerp player position and rotation
 		var pos: Vector2 = lerp(prev_player_state[peer_id]["pos"], future_player_state[peer_id]["pos"], Client.lerp_factor)

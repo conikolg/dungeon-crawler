@@ -99,11 +99,6 @@ remote func client_receive_world_state(world_state: Dictionary) -> void:
 	if world_state["time"] <= self.last_server_update_time:
 		return
 	
-	# Erase the local player from the dictionary
-	var player_dict: Dictionary = world_state["players"]
-	var my_id = self.multiplayer.get_network_unique_id()
-	player_dict.erase(str(my_id))
-	
 	# Record as state of the world
 	self.world_state_buffer.append(world_state)
 

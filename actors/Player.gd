@@ -40,6 +40,20 @@ func _physics_process(_delta: float) -> void:
 	Client.send_server_player_state(self.serialize())
 
 
+# Called every frame
+func _process(_delta: float) -> void:
+	# Nothing to do if not enough states exist
+	if Client.world_state_buffer.size() < 2:
+		return
+	
+	# Get necessary data from Client
+	var prev_player_state: Dictionary = Client.world_state_buffer[0]["players"]
+	var local_player_state: Dictionary = prev_player_state[str(Client.multiplayer.get_network_unique_id())]
+	# Set local player health to update from server.
+	# TODO: only do this when update is applied, not every frame between world state updates
+	self.health_pool.current_health = local_player_state["hp"]["health"]
+	
+
 # This function will handle one-off input events
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed('shoot'):
