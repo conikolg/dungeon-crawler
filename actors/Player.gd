@@ -48,10 +48,12 @@ func _process(_delta: float) -> void:
 	
 	# Get necessary data from Client
 	var prev_player_state: Dictionary = Client.world_state_buffer[0]["players"]
-	var local_player_state: Dictionary = prev_player_state[str(Client.multiplayer.get_network_unique_id())]
+	
 	# Set local player health to update from server.
-	# TODO: only do this when update is applied, not every frame between world state updates
-	self.health_pool.current_health = local_player_state["hp"]["health"]
+	# TODO: Only do this when update is applied, not on every frame between world state updates
+	if prev_player_state.has(str(Client.multiplayer.get_network_unique_id())):
+		var local_player_state: Dictionary = prev_player_state[str(Client.multiplayer.get_network_unique_id())]
+		self.health_pool.current_health = local_player_state["hp"]["health"]
 	
 
 # This function will handle one-off input events
