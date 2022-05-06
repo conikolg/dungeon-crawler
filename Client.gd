@@ -12,6 +12,9 @@ var world_state_buffer: Array = []	# Buffer of world states, only i=1 in the pas
 var render_time_offest: int = 50	# Render the world 50ms in the past
 var lerp_factor: float = 0			# Proportion of time between states at i=0 and i=1
 
+var game_clock: int = 0
+var game_clock_leakage: float = 0
+
 
 func _init() -> void:
 	# Thank you https://github.com/LudiDorici/gd-custom-multiplayer
@@ -41,12 +44,23 @@ func _process(_delta: float) -> void:
 	if self.world_state_buffer.size() < 2:
 		return
 	# Render the players at this timestamp
-	var render_time: int = OS.get_system_time_msecs() - self.render_time_offest
+	var render_time: int = self.game_clock - self.render_time_offest
 	# Advance buffer so that only the first (oldest) state is in the past
 	while self.world_state_buffer.size() > 2 and self.world_state_buffer[1]["time"] < render_time:
 		self.world_state_buffer.remove(0)
 	# Render in the right location
 	self.lerp_factor = float(render_time - self.world_state_buffer[0]["time"]) / float(self.world_state_buffer[1]["time"] - self.world_state_buffer[0]["time"])
+
+
+func _physics_process(delta: float) -> void:
+	# Tick the game clock forward by a bit
+	self.game_clock += int(delta * 1000)
+	# Compute fractional milliseconds remaining
+	self.game_clock_leakage += delta * 1000 - int(delta * 1000)
+	# Add extra millisecond if leakage is too high
+	if self.game_clock_leakage >= 1:
+		self.game_clock += 1
+		self.game_clock_leakage -= 1
 
 
 func connectToServer() -> void:
@@ -69,6 +83,7 @@ func _on_connection_failed() -> void:
 func _on_connection_succeeded() -> void:
 	print("Connection established.")
 	rpc_id(1, "request_data")
+	self.send_server_latency_ping()
 
 
 ##################################################
@@ -80,7 +95,7 @@ func send_server_player_state(state: Dictionary) -> void:
 		return
 	
 	# Attach current timestamp (ms since epoch) to the payload
-	state["time"] = OS.get_system_time_msecs()
+	state["time"] = self.game_clock
 	
 	# Dispatch payload to server
 	rpc_unreliable_id(1, "server_receive_player_pos", state)
@@ -88,6 +103,11 @@ func send_server_player_state(state: Dictionary) -> void:
 
 func send_server_enemy_hit(enemy_name: String) -> void:
 	rpc_id(1, "server_receive_enemy_hit", enemy_name)
+
+
+func send_server_latency_ping() -> void:
+	rpc_id(1, "server_latency_ping", OS.get_system_time_msecs())
+
 
 
 ##################################################
@@ -98,9 +118,14 @@ remote func client_receive_world_state(world_state: Dictionary) -> void:
 	# Ignore if this is the most updated world state so far
 	if world_state["time"] <= self.last_server_update_time:
 		return
-	
+		
 	# Record as state of the world
 	self.world_state_buffer.append(world_state)
+
+
+remote func client_latency_pong(client_time: int, server_time: int) -> void:
+	var latency: int = int(float(OS.get_system_time_msecs() - client_time) / 2)
+	self.game_clock = server_time + latency
 
 
 remote func response_data(text: String) -> void:
