@@ -1,4 +1,4 @@
-extends Node2D
+extends Node
 
 
 var remote_player_scene = preload("res://actors/RemotePlayer.tscn")

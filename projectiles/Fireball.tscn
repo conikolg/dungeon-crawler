@@ -32,6 +32,3 @@ flip_h = true
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 17, -2 )
 shape = ExtResource( 8 )
-
-[connection signal="body_entered" from="." to="." method="_on_Fireball_body_entered"]
-[connection signal="body_exited" from="." to="." method="_on_Fireball_body_exited"]

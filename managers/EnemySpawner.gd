@@ -1,10 +1,6 @@
 extends Node
 
 
-# Instance variables
-export (PackedScene) var enemy = null
-export (int) var max_enemies = 6
-
 var remote_enemy_scene = preload("res://actors/RemoteEnemy.tscn")
 
 
