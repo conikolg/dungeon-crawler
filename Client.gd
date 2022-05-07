@@ -109,6 +109,9 @@ func send_server_latency_ping() -> void:
 	rpc_id(1, "server_latency_ping", OS.get_system_time_msecs())
 
 
+func send_fireball_attack(position: Vector2, rotation: float) -> void:
+	rpc_id(1, "server_receive_fireball_attack", position, rotation)
+
 
 ##################################################
 #			Incoming Network Functions

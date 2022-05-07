@@ -7,6 +7,7 @@
 [ext_resource path="res://assets/fireballoga/red/keyframes/5.png" type="Texture" id=5]
 [ext_resource path="res://assets/fireballoga/red/keyframes/6.png" type="Texture" id=6]
 [ext_resource path="res://projectiles/Fireball.gd" type="Script" id=7]
+[ext_resource path="res://projectiles/FireballCollisionShape.tres" type="Shape2D" id=8]
 
 [sub_resource type="SpriteFrames" id=2]
 animations = [ {
@@ -15,9 +16,6 @@ animations = [ {
 "name": "New Anim",
 "speed": 12.0
 } ]
-
-[sub_resource type="RectangleShape2D" id=3]
-extents = Vector2( 9, 7 )
 
 [node name="Fireball" type="Area2D"]
 script = ExtResource( 7 )
@@ -33,7 +31,7 @@ flip_h = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="."]
 position = Vector2( 17, -2 )
-shape = SubResource( 3 )
+shape = ExtResource( 8 )
 
 [connection signal="body_entered" from="." to="." method="_on_Fireball_body_entered"]
 [connection signal="body_exited" from="." to="." method="_on_Fireball_body_exited"]
